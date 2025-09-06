@@ -1,13 +1,11 @@
 // context/EventsContext.tsx
 import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from "react";
 import { useParams } from "react-router-dom";
-import { Event } from "../types/models";
 import { apiFetch } from "../lib/api";
-import { ApiResponse } from "../types/common";
 import { useAuth } from "./AuthContext";
 
 interface EventContextType {
-  event: Event | null;
+  event: EventModel | null;
   loading: boolean;
   refreshEvent: () => void;
 }
@@ -15,7 +13,7 @@ interface EventContextType {
 const EventContext = createContext<EventContextType | undefined>(undefined);
 
 export const EventProvider = ({ children }: { children: ReactNode }) => {
-  const [event, setEvent] = useState<Event | null>(null);
+  const [event, setEvent] = useState<EventModel | null>(null);
   const [loading, setLoading] = useState(true);
   const { eventId } = useParams<{ eventId: string }>();
 
@@ -25,7 +23,7 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
       if (!eventId) return;
       setLoading(true);
       try {
-        const res = await apiFetch<ApiResponse<Event>>(`/api/events/${eventId}`, {
+        const res = await apiFetch<ApiResponse<EventModel>>(`/api/events/${eventId}`, {
           method: "GET",
           headers: { Authorization: `Bearer ${token}` },
         });

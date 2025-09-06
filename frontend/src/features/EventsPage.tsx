@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Box, Heading, Button, Input, SimpleGrid, Text, VStack, Card, CardBody, CloseButton, Dialog, Portal, Select as ChakraSelect, createListCollection, Field } from "@chakra-ui/react";
 import { apiFetch } from "../lib/api";
-import { Event } from "../types/models";
 import { useAuth } from "../context/AuthContext";
 import { useEvents } from "../context/EventsContext";
 import { useNavigate } from "react-router-dom";
@@ -27,7 +26,7 @@ export default function EventsPage() {
   const handleCreateEvent = async () => {
     if (!newEvent.organizer_id) return; // simple validation
     try {
-      const res = await apiFetch<{ success: boolean; data: Event }>(`/api/events/${newEvent.organizer_id}/create`, {
+      const res = await apiFetch<ApiResponse<EventModel>>(`/api/events/${newEvent.organizer_id}/create`, {
         method: "POST",
         headers: { 
           Authorization: `Bearer ${token}`,
@@ -76,7 +75,7 @@ export default function EventsPage() {
                       <Portal>
                         <ChakraSelect.Positioner>
                           <ChakraSelect.Content zIndex={1500}>
-                            {clubsCollection.items.map((club) => (
+                            {clubsCollection.items.map((club:any) => (
                               <ChakraSelect.Item
                                 key={club.value}
                                 item={club}

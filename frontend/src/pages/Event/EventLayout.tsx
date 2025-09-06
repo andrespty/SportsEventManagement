@@ -2,14 +2,13 @@ import React from "react";
 import { useParams, Outlet, useNavigate , useLocation} from "react-router-dom";
 import { Box, Spinner, Text, Heading, HStack, Clipboard, Button, Tabs } from "@chakra-ui/react";
 import { apiFetch } from "../../lib/api"
-import { ApiResponse } from "../../types/common";
 import { useAuth } from "../../context/AuthContext";
 import { useEvent } from "../../context/EventContext";
 
 const EventLayout: React.FC = () => {
 
   const { token, user } = useAuth();
-  const { event, loading } = useEvent()
+  const { event, loading, refreshEvent } = useEvent()
   const { eventId } = useParams<{ eventId: string }>();
   const navigate = useNavigate()
   const location = useLocation()
@@ -49,8 +48,8 @@ const EventLayout: React.FC = () => {
   }
 
   // Check if user owns the organizer club
-  const isOrganizerOwner = user?.clubs?.some(
-    (club) => club.id === event.organizer_id
+  const isOrganizerOwner = Boolean(
+    user?.clubs?.some((club: Club) => club.id === event.organizer_id)
   );
 
   // Map routes to tabs
@@ -67,7 +66,7 @@ const EventLayout: React.FC = () => {
         <Heading>{event.name}</Heading>
         {
             isOrganizerOwner ? 
-            event.join_links.length != 0 ?
+            event.join_links.length !== 0 ?
             <Clipboard.Root value={`/events/invite/${event.join_links[0].token}`}>
                 <Clipboard.Trigger asChild>
                 <Button variant={'surface'} size='xs'>
@@ -101,7 +100,7 @@ const EventLayout: React.FC = () => {
             </Tabs.List>
         </Tabs.Root>
         
-        <Outlet />
+        <Outlet context={{ event, isOrganizerOwner, loading, refreshEvent } satisfies EventContext} />
     </Box>
   );
 };

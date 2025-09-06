@@ -2,7 +2,6 @@ import React from "react";
 import {Box, Button } from "@chakra-ui/react";
 import { useAuth } from "../../context/AuthContext";
 import { canAccess } from "../../utils/canAccess";
-import { UserRoles } from "../../types/auth";
 import ManagerBoard from "./ManagerBoard";
 import ClubOwnerBoard from "./ClubOwnerBoard";
 
