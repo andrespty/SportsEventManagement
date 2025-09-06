@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { Box, Spinner, Text, VStack } from "@chakra-ui/react";
+import { Box, Spinner } from "@chakra-ui/react";
 import { ReactFlow, Node, Edge } from "@xyflow/react";
 import '@xyflow/react/dist/style.css';
 import { computeNodePositions, generateBracket, SeededParticipant, MatchBracket } from "./BracketDisplay";
