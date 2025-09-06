@@ -12,7 +12,7 @@ const EventMatches: React.FC = () => {
     <Box>
       <Text>Welcome to the overview of "{event.name}"!</Text>
       {/* Add more summary info, stats, charts, etc. */}
-      <BracketViewer apiEndpoint="/api/events/categories/1/bracket" />
+      <BracketViewer apiEndpoint="/api/events/categories/2/bracket" />
     </Box>
   );
 };

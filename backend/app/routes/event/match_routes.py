@@ -137,57 +137,111 @@ def create_bracket(event_id, category_id, club):
     return success_response({"message": "Bracket created"})
 
 @event_bp.route("/matches/<int:match_id>/winner", methods=["PATCH"])
+@club_owner_required(from_event=True)
 def set_winner(match_id):
+    """
+    Set the winner of a match and advance them through the bracket.
+    Only managers and club owners can set match winners.
+    """
     data = request.get_json() or {}
     winner_id = data.get("winner_id")
 
     if not winner_id:
         return error_response({"error": "winner_id is required"}, 400)
 
-    match = Match.query.get(match_id)
+    # Get match with category information
+    match = Match.query.options(
+        joinedload(Match.category)
+    ).get(match_id)
+    
     if not match:
         return error_response({"error": "Match not found"}, 404)
+
+    # Ensure this is a bracket match
+    if not match.category.is_bracket:
+        return error_response({"error": "Winner can only be set for bracket matches"}, 400)
+
+    # Check if match is already completed
+    if match.status == "completed":
+        return error_response({"error": "Match is already completed"}, 400)
 
     winner = EventParticipant.query.get(winner_id)
     if not winner:
         return error_response({"error": "Winner participant not found"}, 404)
 
     # Ensure the winner is actually in this match
-    mp = MatchParticipant.query.filter_by(match_id=match.id, participant_id=winner.id).first()
-    if not mp:
+    winner_mp = MatchParticipant.query.filter_by(match_id=match.id, participant_id=winner.id).first()
+    if not winner_mp:
         return error_response({"error": "This participant is not in the given match"}, 400)
 
-    # Mark this match as completed and winner
+    # Mark this match as completed and set winner
     match.status = "completed"
-    mp.rank = 1
-    mp.result_type = "win"
+    winner_mp.rank = 1
+    winner_mp.result_type = "win"
 
-    # Everyone else in this match loses
-    others = MatchParticipant.query.filter(
+    # Set all other participants as losers
+    other_participants = MatchParticipant.query.filter(
         MatchParticipant.match_id == match.id,
         MatchParticipant.participant_id != winner.id
     ).all()
-    for o in others:
-        o.rank = 2
-        o.result_type = "loss"
+    
+    for i, other_mp in enumerate(other_participants, start=2):
+        other_mp.rank = i
+        other_mp.result_type = "loss"
 
-    # Advance winner to the next round(s)
+    # Advance participants to next round(s) based on qualifier_rank
+    advanced_matches = []
     for rel in match.next_match_links:  # relations where this match is a source
         target_match = rel.target_match
-        if not any(mp.participant_id == winner.id for mp in target_match.participants):
-            db.session.add(MatchParticipant(
+        
+        # Find the participant who should advance based on qualifier_rank
+        advancing_participant = None
+        if rel.qualifier_rank == 1:  # Winner advances
+            advancing_participant = winner
+        else:  # Runner-up or other rank advances
+            advancing_mp = MatchParticipant.query.filter_by(
+                match_id=match.id, 
+                rank=rel.qualifier_rank
+            ).first()
+            if advancing_mp:
+                advancing_participant = advancing_mp.participant
+        
+        if advancing_participant:
+            # Check if participant is already in the target match
+            existing_mp = MatchParticipant.query.filter_by(
                 match_id=target_match.id,
-                participant_id=winner.id
-            ))
+                participant_id=advancing_participant.id
+            ).first()
+            
+            if not existing_mp:
+                # Add participant to target match
+                new_mp = MatchParticipant(
+                    match_id=target_match.id,
+                    participant_id=advancing_participant.id,
+                    role="competitor"
+                )
+                db.session.add(new_mp)
+                advanced_matches.append({
+                    "match_id": target_match.id,
+                    "participant_id": advancing_participant.id,
+                    "qualifier_rank": rel.qualifier_rank
+                })
 
-    db.session.commit()
-
-    return success_response({
-        "message": "Winner set and advanced",
-        "match_id": match.id,
-        "winner_id": winner.id,
-        "next_matches": [rel.target_match_id for rel in match.next_match_links]
-    }, 200)
+    try:
+        db.session.commit()
+        
+        return success_response({
+            "message": "Winner set and participants advanced",
+            "match_id": match.id,
+            "winner_id": winner.id,
+            "match_status": match.status,
+            "advanced_to_matches": advanced_matches,
+            "total_advanced": len(advanced_matches)
+        }, 200)
+        
+    except Exception as e:
+        db.session.rollback()
+        return error_response({"error": f"Failed to update match: {str(e)}"}, 500)
 
 @event_bp.route("/categories/<int:category_id>/bracket", methods=["GET"])
 def get_category_bracket(category_id: int):
