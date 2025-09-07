@@ -1,15 +1,11 @@
 import React from "react";
-import { useParams } from "react-router-dom";
 import { Box, Heading, Text, Button, VStack, Card, CardBody } from "@chakra-ui/react";
-import { useAuth } from "../../../context/AuthContext";
 import { ParticipantsCard } from "../../../components/event/ParticipantsCard";
 import EventCategories from "../../../components/event/EventCategories";
 import { useEvent } from "../../../context/EventContext";
 
 const EventManagement: React.FC = () => {
-  const { event, refreshEvent } = useEvent()
-  const { token } = useAuth();
-  const { eventId } = useParams<{ eventId: string }>();
+  const { event } = useEvent()
 
 
   if (!event) {

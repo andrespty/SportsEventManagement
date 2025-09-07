@@ -19,7 +19,7 @@ export const EventsProvider = ({ children }: { children: ReactNode }) => {
   const [participatingEvents, setParticipatingEvents] = useState<EventModel[]>([]);
   const [loadingParticipating, setLoadingParticipating] = useState(true);
 
-  const { token, user } = useAuth();
+  const { token } = useAuth();
 
   useEffect(() => {
     const fetchParticipating = async () => {

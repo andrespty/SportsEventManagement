@@ -1,6 +1,12 @@
 // Global type declarations for auth types
 // These types are automatically available throughout the app
 
+export enum UserRoles {
+  USER = 'user',
+  MANAGER = 'manager',
+  ADMIN = 'admin'
+}
+
 declare global {
   type LoginData = {
     access_token: string;
@@ -9,17 +15,8 @@ declare global {
 
   type LoginResponse = ApiResponse<LoginData>;
 
-  enum UserRoles {
-    USER = 'user',
-    MANAGER = 'manager',
-    ADMIN = 'admin'
-  }
-
   interface AccessOptions {
     owner?: boolean;      // check if user is owner
     roles?: UserRoles[];  // check if user role is in this list
   }
 }
-
-// This export is required for the global declaration to work
-export {};

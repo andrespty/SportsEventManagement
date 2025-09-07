@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Box, Heading, VStack, Card, CardBody, Spinner, Text, Tabs } from "@chakra-ui/react";
 import { apiFetch } from "../../lib/api";
-import { ApiResponse } from "../../types/common";
 import { useAuth } from "../../context/AuthContext";
 import ClubList from "./ClubList";
 import ParticipantList from "./ParticipantList";
 import RequestList from "./RequestList";
 import { EventJoinRequestsAPI, JoinRequest } from "../../types/enpoints";
-import { Club } from "../../types/models";
 import MyParticipants from "./MyParticipants";
 import { useEvent } from "../../context/EventContext";
 
@@ -17,7 +15,7 @@ interface ParticipantsCardProps {
 
 export const ParticipantsCard: React.FC<ParticipantsCardProps> = ({ isOrganizer }) => {
   const { event } = useEvent()
-  const { token, user } = useAuth();
+  const { token } = useAuth();
   const [clubs, setClubs] = useState<Club[]>(event?.participating_clubs || []);
   const [participants, setParticipants] = useState<any[]>(event?.participants || []);
   const [requests, setRequests] = useState<JoinRequest[]>([]);

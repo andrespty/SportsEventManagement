@@ -1,6 +1,5 @@
 import { Box, Checkbox, Heading, Portal, Select, Stack, Text, CheckboxGroup, createListCollection, Flex } from "@chakra-ui/react";
-import { CategoryFull, EventParticipant } from "../types/models";
-import BracketBuilder from "./matches/BracketBuilder";
+// import BracketBuilder from "./matches/BracketBuilder";
 
 type MatchCreationFormProps = {
   categories: CategoryFull[];

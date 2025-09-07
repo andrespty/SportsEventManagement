@@ -5,8 +5,6 @@ import {
   VStack
 } from "@chakra-ui/react";
 import { apiFetch } from "../../lib/api";
-import { CategoryFull, Event } from "../../types/models";
-import { ApiResponse } from "../../types/common";
 import { useAuth } from "../../context/AuthContext";
 import { FiX } from "react-icons/fi";
 import { useEvent } from "../../context/EventContext";

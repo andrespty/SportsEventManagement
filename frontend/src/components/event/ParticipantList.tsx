@@ -1,6 +1,5 @@
 import React from "react";
-import { VStack, Box, Text, Accordion, Span, HStack } from "@chakra-ui/react";
-import { EventParticipant } from "../../types/models";
+import { VStack, Text, Accordion, Span, HStack } from "@chakra-ui/react";
 import { groupParticipantsByCategory } from "../../utils/groupParticipantsByCategory";
 
 interface ParticipantListProps {
