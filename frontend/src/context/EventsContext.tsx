@@ -1,33 +1,31 @@
 // context/EventsContext.tsx
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { Event } from "../types/models";
 import { apiFetch } from "../lib/api";
-import { ApiResponse } from "../types/common";
 import { useAuth } from "./AuthContext";
 
 interface EventsContextType {
-  events: Event[];
-  setEvents: React.Dispatch<React.SetStateAction<Event[]>>;
+  events: EventModel[];
+  setEvents: React.Dispatch<React.SetStateAction<EventModel[]>>;
   loading: boolean;
-  participatingEvents: Event[];
+  participatingEvents: EventModel[];
   loadingParticipating: boolean;
 }
 
 const EventsContext = createContext<EventsContextType | undefined>(undefined);
 
 export const EventsProvider = ({ children }: { children: ReactNode }) => {
-  const [events, setEvents] = useState<Event[]>([]);
+  const [events, setEvents] = useState<EventModel[]>([]);
   const [loading, setLoading] = useState(true);
-  const [participatingEvents, setParticipatingEvents] = useState<Event[]>([]);
+  const [participatingEvents, setParticipatingEvents] = useState<EventModel[]>([]);
   const [loadingParticipating, setLoadingParticipating] = useState(true);
 
-  const { token, user } = useAuth();
+  const { token } = useAuth();
 
   useEffect(() => {
     const fetchParticipating = async () => {
       setLoadingParticipating(true);
       try {
-        const res = await apiFetch<ApiResponse<Event[]>>(
+        const res = await apiFetch<ApiResponse<EventModel[]>>(
           `/api/events/participating`,
           { 
             method: "GET", 
@@ -46,7 +44,7 @@ export const EventsProvider = ({ children }: { children: ReactNode }) => {
     };
     const fetchMyEvents = async () => {
       try {
-        const res = await apiFetch<ApiResponse<Event[]>>(`/api/events/`, {
+        const res = await apiFetch<ApiResponse<EventModel[]>>(`/api/events/`, {
           method: "GET",
           headers: { Authorization: `Bearer ${token}` }
         });

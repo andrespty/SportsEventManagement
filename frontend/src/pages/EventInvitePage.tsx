@@ -3,7 +3,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Box, Button, Card, CardBody, Heading, Text, Spinner, Checkbox, CheckboxGroup, Stack } from "@chakra-ui/react";
 import { useAuth } from "../context/AuthContext";
 import { apiFetch } from "../lib/api";
-import { ApiResponse } from "../types/common";
 import { useToastContext } from "../context/ToastContext";
 
 interface EventInvite {

@@ -1,10 +1,8 @@
 import React from "react";
-import { VStack, Box, Text, Button, HStack, IconButton } from "@chakra-ui/react";
+import { VStack, Box, Text, HStack, IconButton } from "@chakra-ui/react";
 import { apiFetch } from "../../lib/api";
-import { ApiResponse } from "../../types/common";
 import { useAuth } from "../../context/AuthContext";
 import { JoinRequest } from "../../types/enpoints";
-import { CiCircleCheck, CiCircleRemove } from "react-icons/ci";
 import { FiX, FiCheck } from "react-icons/fi";
 import { useToastContext } from "../../context/ToastContext";
 import { useEvent } from "../../context/EventContext";

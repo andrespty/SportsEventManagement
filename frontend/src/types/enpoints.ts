@@ -1,5 +1,3 @@
-import { Club } from "./models";
-
 export type EventJoinRequestsAPI = {
     event_id: number;
     event_name: string;

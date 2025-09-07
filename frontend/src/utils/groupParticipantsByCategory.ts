@@ -1,5 +1,3 @@
-import { EventParticipant, CategorySimple } from "../types/models";
-
 type CategoryWithParticipants = {
   id: number;
   name: string;

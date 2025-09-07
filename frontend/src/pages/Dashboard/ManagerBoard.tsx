@@ -2,8 +2,6 @@ import React, { useState, useEffect} from 'react'
 import { Box, Text } from '@chakra-ui/react'
 import { CreateClub } from '../../features/CreateClub'
 import { apiFetch } from '../../lib/api'
-import { User } from '../../types/models'
-import { ApiResponse } from '../../types/common'
 import { useAuth } from '../../context/AuthContext'
 
 export default function ManagerBoard() {

@@ -4,7 +4,6 @@ import { ReactFlow, Node, Edge } from "@xyflow/react";
 import '@xyflow/react/dist/style.css';
 import { computeNodePositions, generateBracket, SeededParticipant, MatchBracket } from "./BracketDisplay";
 import { apiFetch } from "../../lib/api";
-import { ApiResponse } from "../../types/common";
 import CustomNode from "./CustomNode";
 
 interface BracketViewerProps {
