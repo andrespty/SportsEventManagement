@@ -1,14 +1,13 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { Box, Spinner, Text, VStack } from "@chakra-ui/react";
+import { Box, Spinner } from "@chakra-ui/react";
 import { ReactFlow, Node, Edge } from "@xyflow/react";
 import '@xyflow/react/dist/style.css';
 import { computeNodePositions, generateBracket, SeededParticipant, MatchBracket } from "./BracketDisplay";
 import { apiFetch } from "../../lib/api";
-import { ApiResponse } from "../../types/common";
 import CustomNode from "./CustomNode";
 
 interface BracketViewerProps {
-  apiEndpoint: string;
+  categoryId: number;
 }
 
 interface Res {
@@ -34,7 +33,7 @@ export const mapPositionsByMatchNumber = (
   return newPositions;
 };
 
-const BracketViewer: React.FC<BracketViewerProps> = ({ apiEndpoint }) => {
+const BracketViewer: React.FC<BracketViewerProps> = ({ categoryId }) => {
   const [apiData, setApiData] = useState<Res | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -42,7 +41,7 @@ const BracketViewer: React.FC<BracketViewerProps> = ({ apiEndpoint }) => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      apiFetch<ApiResponse<Res>>(apiEndpoint)
+      apiFetch<ApiResponse<Res>>(`/api/events/categories/${categoryId}/bracket`)
         .then((r) => {
             if (r.success){
                 console.log(r.data)
@@ -52,7 +51,7 @@ const BracketViewer: React.FC<BracketViewerProps> = ({ apiEndpoint }) => {
       setLoading(false);
     };
     fetchData();
-  }, [apiEndpoint]);
+  }, [categoryId]);
 
   // ---------------- Generate visual bracket ----------------
   const visualBracket = useMemo(() => {

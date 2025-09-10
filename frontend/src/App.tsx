@@ -12,10 +12,10 @@ import { ToastProvider } from './context/ToastContext';
 import { EventsProvider } from './context/EventsContext';
 import EventLayout from './pages/Event/EventLayout';
 import { EventProvider } from './context/EventContext';
-import EventInfo from './pages/Event/EventInfo';
+import EventInfo from './pages/Event/InfoSettings/EventInfo';
 import EventMatches from './pages/Event/EventMatches';
-import EventStandings from './pages/Event/EventStandings';
-import EventSchedules from './pages/Event/EventSchedules';
+import EventStandings from './pages/Event/Standings/EventStandings';
+import EventSchedules from './pages/Event/Schedules/EventSchedules';
 // WHEN TOKEN EXPIRES, LOG OUT AND NAVIGATE TO LOGIN
 
 

@@ -1,6 +1,5 @@
 import React from "react";
-import { Box, Heading, Text, VStack, Card, CardBody, HStack } from "@chakra-ui/react";
-import { Event } from "../../types/models";
+import { Box, Heading, Text, VStack, Card, CardBody } from "@chakra-ui/react";
 import { ParticipantsCard } from "../../components/event/ParticipantsCard";
 import EventCategories from "../../components/event/EventCategories";
 import { useEvent } from "../../context/EventContext";

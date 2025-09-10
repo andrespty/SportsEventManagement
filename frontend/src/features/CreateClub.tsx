@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { Box, Input, List, ListItem, Button, Text, HStack, useDisclosure, Dialog, Portal, CloseButton, Stack, Avatar, Heading, Field, Tag} from "@chakra-ui/react";
-import { Club, User } from "../types/models";
 import { apiFetch } from "../lib/api";
-import { ApiResponse } from "../types/common";
 import { useAuth } from "../context/AuthContext";
 import { toaster, Toaster } from "../components/ui/toaster";
 
