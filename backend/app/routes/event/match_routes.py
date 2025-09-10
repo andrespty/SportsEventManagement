@@ -136,6 +136,48 @@ def create_bracket(event_id, category_id, club):
     db.session.commit()
     return success_response({"message": "Bracket created"})
 
+@event_bp.route("/matches/<int:match_id>", methods=["PATCH"])
+@club_owner_required(from_event=True)
+def update_match(match_id):
+    """
+    Update a match's participants' scores and status.
+    Expects JSON: { "scores": {match_participant_id: score, ...}, "status": "string" }
+    """
+    data = request.get_json() or {}
+    scores = data.get("scores", {})
+    status = data.get("status", None)
+
+    match = Match.query.get(match_id)
+    if not match:
+        return error_response({"error": "Match not found"}, 404)
+
+    # Update scores for each MatchParticipant
+    for mp_id_str, score in scores.items():
+        try:
+            mp_id = int(mp_id_str)
+        except ValueError:
+            continue  # skip invalid keys
+
+        mp = MatchParticipant.query.filter_by(id=mp_id, match_id=match_id).first()
+        if mp:
+            mp.score = score
+
+    # Update match status if provided
+    if status:
+        match.status = status
+
+    try:
+        db.session.commit()
+        return success_response({
+            "message": "Match updated",
+            "match_id": match.id,
+            "status": match.status,
+            "scores": scores
+        }, 200)
+    except Exception as e:
+        db.session.rollback()
+        return error_response({"error": f"Failed to update match: {str(e)}"}, 500)
+
 @event_bp.route("/matches/<int:match_id>/winner", methods=["PATCH"])
 @club_owner_required(from_event=True)
 def set_winner(match_id):
