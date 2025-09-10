@@ -22,9 +22,9 @@ declare global {
     participant_id: number;
     role: string;
     position: string;
-    score: number;
-    rank: number;
-    result_type: string;
+    score: number | null;
+    rank: number | null;
+    result_type: string | null;
     participant: EventParticipantSimple;
   };
 
@@ -35,6 +35,7 @@ declare global {
     match_number: number;
     status: string;
     participants: MatchParticipant[];
+    start_time: string | null; // ISO date string or null
   };
 
   type CategoryFull = {

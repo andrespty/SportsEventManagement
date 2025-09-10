@@ -7,3 +7,4 @@ export default function EventStandings() {
     <div>EventStandings {event.name}</div>
   )
 }
+
