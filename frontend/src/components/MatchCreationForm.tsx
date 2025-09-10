@@ -2,8 +2,7 @@ import { Box, Checkbox, Heading, Portal, Select, Stack, Text, CheckboxGroup, cre
 // import BracketBuilder from "./matches/BracketBuilder";
 
 type MatchCreationFormProps = {
-  categories: CategoryFull[];
-  participants: EventParticipant[];
+  event: EventModel;
   onChange: React.Dispatch<React.SetStateAction<{
     type?: string;
     categoryId?: number;
@@ -16,21 +15,21 @@ value: {
 }
 };
 
-const MatchCreationForm = ({ categories, participants, onChange, value }: MatchCreationFormProps) => {
+const MatchCreationForm = ({ event, onChange, value }: MatchCreationFormProps) => {
 
   const matchTypeCollection = createListCollection({
-      items: [
-          { label: 'Single Event', value: 0 }, 
-          { label: 'Single Elimination Bracket', value: 1 }
-      ]
-    });
+    items: [
+        { label: 'Single Event', value: 0 }, 
+        { label: 'Single Elimination Bracket', value: 1 }
+    ]
+  });
 
   const categoriesCollection = createListCollection({
-      items: categories.map((cat: {id: number, name:string}) => ({label: cat.name, value: cat.id}))
+      items: event.categories.map((cat: {id: number, name:string}) => ({label: cat.name, value: cat.id}))
   })
 
   const catParticipants = value.categoryId
-  ? participants
+  ? event.participants
       .filter((p) => p.categories.some((cat) => cat.id === value.categoryId))
       .map((p, i) => ({ ...p, seed: i + 1 }))
   : [];
